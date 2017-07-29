@@ -1,0 +1,7 @@
+README
+
+The script should be run in a directory tree that has no spaces in directory names, if the directory tree has spaces for example /Users/schwab/CSCI HW1/example, issues may occur.
+
+The directory arguments can be inputed as: example or example/ and pattern arguments can be "*.gif" or *.gif
+
+

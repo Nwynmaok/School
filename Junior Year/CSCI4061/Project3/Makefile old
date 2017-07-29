@@ -1,0 +1,2 @@
+all: mini_filesystem.c test.c
+	gcc -o test mini_filesystem.c test.c -I.

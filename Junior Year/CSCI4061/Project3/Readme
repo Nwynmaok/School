@@ -1,0 +1,58 @@
+README
+Isaac Schwab
+Nathan Kaufman
+
+Tested on machines: KHK4250-08, Lind40-02
+
+Usage:
+run "make" from root directory
+./test <input_dir> <output_dir> <log_filename>
+
+log, summary and html files will be written to root directory
+
+Program Description:
+This program takes in an input_directory, output_directory, and log_filename.
+It then creates a Filesystem using the mini_filesystem API. The filesystem is
+created by recursivly reading in files from the input_directory. This is done
+in write_into_filesystem. After the files have been written to the filesystem
+we call make_filesystem_summary to output summary.txt, which displays a
+summary of the filesystem. After that we read the images back from the filesystem
+and then write them to the output directory. Finally, we convert the images in the
+output directory using fork() and execl to convert the images. Then an html file
+is generated with all of these images and thumbnails.
+
+Helper Functions:
+We wrote various helper functions throughout test.c and the mini_filesystem.
+They are listed below:
+ - void get_and_write_files(char *path)
+ - void writeFile(char* filename, char* path)
+ - int getFilesize(int inode_number);
+ - void getFilesystem(FILE *summary);
+ - void updateLog(char* structure, char* access);
+These functions helped simplify the code, and also kept the mini_filesystem
+data structures unexposed.
+In addition to creating these helper functions, we also added a few parameters
+to some of the given functions. These added parameters made sense to add as they
+helped with the looping.
+
+Special cases:
+NONE
+
+Experiment:
+In order to quantify the performance of our file system we will be looking at how long it takes to read a file from our file system. To do this we added a Count variable in our program that increments for every low level function. We then take only the amount of Count for read functions. We then divide this by our total number of files to get the average number of accesses per file.
+
+Files in our file system: 14
+Number of read accesses: 7358
+Average accesses per file: ~526
+
+Now that we know the average number of accesses for a file we look at the time it takes for our given disk to complete these actions. Disk access time is quantified by summing the Average Seek time, Average rotation time and Average transfer time. Average seek time is given to us as 4 ms. Average rotation time is ½ * 1/RPM * 60 sec and equals 2ms. The average transfer time is given by 1/RPM * 1/avg sectors per track * 60 sec and equals 0.004ms.
+
+When looking at the Best case for reading the file we will only seek and rotate once and then transfer for every access to our file system.
+
+Best Case: 4ms (avg seek) + 2ms (avg rotate) + 0.004ms * 526 (avg accesses) = 8.104ms
+
+When looking at the Average case for reading the file we will need to seek, rotate and transfer for every access as the blocks are randomly mapped and will need to be located.
+
+Average case: (4ms + 2ms + 0.004ms) * 526 = 3158.1ms
+
+So from our results we can see that the seek and rotation time dominate the performance of our file system. When we do not have to seek and rotate for every access (best case) the performance of our file system is greatly improved.

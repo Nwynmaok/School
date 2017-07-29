@@ -1,0 +1,40 @@
+Isaac Schwab
+Nathan Kaufman
+
+Tested on machines: KHK1200-25
+
+Usage:
+run "make" from root directory
+./image_manager <variant> <input_dir> <output_dir>
+
+catalog.html, catalog.log and output.log will be written to specified output_dir
+
+Timing analysis:
+To get the runtime of our variants we initialized a timer (called "timer") with an interval of 1 millisecond.
+The timer then begins at the start of our variant process and every 1 millisecond that this code is running will generate a signal.
+Upon generation of a signal our signal handler function will be called which will get the information of directories and files traversed up to that point.
+The variant process will continue as normal. Calling the signal handler every millisecond to log information until completion.
+
+A separate timer and signal handler will be used in a similar fashion.
+This time when added to the variant process time will give us the overall runtime for our program.
+
+When comparing the performance of the different variants we look at the time and space requirements of each variant.
+Variant 2 had the longest runtime.
+This is due to a thread being created for each image type in each directory regardless of a file of that type being present.
+Each thread, or file type, is then processed sequentially. This is why variant 2 has the longest runtime.
+For each variant we allocate two arrays. These arrays hold the path to each directory and to each file in our input directory.
+For variant 2 we call 4 different threads for each image type.
+We must copy this array of files to a new array that can be accessed from each individual thread.
+Thus variant 2 will also have the largest spatial requirements.
+
+
+Variant 3 had the fastest runtime.
+A thread is created to for each directory and each file in the directory.
+By processing each file with its own thread these files can be processed concurrently, greatly improving our runtime.
+The spatial requirements for variant 1 and 3 will be similar as we are allocating space for our array of directories and array of files.
+Each thread can access these two arrays so there is no copying needed such as in variant 2.
+
+Variant 1 had a runtime between these two.
+This is because while we used the fewest number of threads, one per directory, we did not have as many threads without processes as in Variant 2.
+Each directory can be processed concurrently after being encountered.
+This results in a runtime much quicker than variant 2 but still slower than variant 3 in which each file was processed concurrently.

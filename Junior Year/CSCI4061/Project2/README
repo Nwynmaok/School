@@ -1,0 +1,23 @@
+README
+Isaac Schwab 4841729
+Nathan Kaufman 4872400
+
+Tested on 4-250 Lab Machines
+
+Zip should contain:
+- parallel_convert.c
+- Makefile
+- Program_overview.pdf
+- Experiment writeup.pdf
+- time.sh
+
+To run code:
+parallel_convert.c and Makefile should be in the same directory, along with the input_dir you wish to run with program on
+
+Terminal:
+username@Directory/path:$ make
+username@Directory/path:$ parallel_convert [convert_count] [output_dir] [input_dir]
+
+
+Only encountered issue:
+When we were running many tests using experiment script, we had an occasional crash if we didn't delete the output_dir
